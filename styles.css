@@ -47,7 +47,24 @@ body {
     padding: 32px;
     text-align: center;
     border-bottom: 1px solid rgba(255,255,255,0.08);
+    position: relative;
 }
+
+.help-btn {
+    position: absolute;
+    right: 16px;
+    top: 16px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.08);
+    color: var(--text);
+    cursor: pointer;
+    font-weight: 800;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+}
+.help-btn:hover { background: rgba(90,200,250,0.25); color: #0b1021; }
 
 .header h1 { font-size: 2em; margin-bottom: 8px; }
 .header p { color: var(--muted); }

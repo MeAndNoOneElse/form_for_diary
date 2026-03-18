@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Зачем мы собираем данные</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container" style="max-width: 900px; margin-top: 30px;">
+    <div class="header" style="position: relative;">
+      <h1>🎯 Зачем мы собираем эти данные?</h1>
+      <p>Превращаем ежедневные заметки в полезные инсайты о твоей жизни</p>
+    </div>
+
+    <div class="form-container" style="max-height: none;">
+      <div class="stats-grid" style="margin-bottom: 16px;">
+        <div class="stat-card"><div class="value">😊</div><div class="trend">Понимание себя</div><div class="hint">Что влияет на настроение</div></div>
+        <div class="stat-card"><div class="value">📈</div><div class="trend">Прогресс</div><div class="hint">Динамика в цифрах</div></div>
+        <div class="stat-card"><div class="value">🎯</div><div class="trend">Инсайты</div><div class="hint">Неочевидные связи</div></div>
+        <div class="stat-card"><div class="value">⚡</div><div class="trend">Улучшения</div><div class="hint">Решения на фактах</div></div>
+      </div>
+
+      <div class="form-group">
+        <h3>Что мы фиксируем</h3>
+        <ul style="margin-left: 16px; color: var(--text); line-height: 1.5;">
+          <li>Сон: режим, длительность, качество и долг сна.</li>
+          <li>Активность: шаги, тренировки, калории.</li>
+          <li>Эмоции: настроение, стресс, хорошие/плохие события.</li>
+          <li>Учёба/работа: посещаемость, домашка, прокрастинация.</li>
+          <li>Итог дня: продуктивность, усталость, короткий комментарий.</li>
+        </ul>
+      </div>
+
+      <div class="form-group">
+        <h3>Как читать аналитику</h3>
+        <ul style="margin-left: 16px; color: var(--text); line-height: 1.5;">
+          <li>Графики: тренды настроения, стресса, сна, продуктивности, усталости.</li>
+          <li>MA(3): скользящее среднее сглаживает шум, видно реальный тренд.</li>
+          <li>Долг сна: ниже 0 — недосып, выше — запас.</li>
+          <li>Шаги ↔ настроение: нормализованные кривые для связи активности и эмоций.</li>
+          <li>Корреляции: быстрый взгляд, что двигается вместе.</li>
+        </ul>
+      </div>
+
+      <div class="form-group">
+        <h3>Зачем это тебе</h3>
+        <ul style="margin-left: 16px; color: var(--text); line-height: 1.5;">
+          <li>Осознанность: видишь триггеры радости и стресса.</li>
+          <li>Предупреждение: ранний сигнал про недосып и выгорание.</li>
+          <li>План: понимаешь, что реально работает для продуктивности.</li>
+          <li>Факты: есть чем поделиться с врачом/тренером.</li>
+        </ul>
+      </div>
+
+      <div class="form-group">
+        <h3>Как использовать</h3>
+        <ul style="margin-left: 16px; color: var(--text); line-height: 1.5;">
+          <li>Заполняй ежедневно — streak сверху покажет серию.</li>
+          <li>Смотри MA(3) и корреляции, чтобы править режим.</li>
+          <li>Экспортируй JSON/CSV для бэкапа или Excel/Sheets.</li>
+          <li>Не жди чуда за день — 2–3 недели дадут ясные выводы.</li>
+        </ul>
+      </div>
+
+      <div class="form-group" style="text-align: center; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+        <a class="btn btn-primary" href="index.html">🚀 Перейти к дневнику</a>
+        <a class="btn btn-info" href="#" onclick="window.print(); return false;">📄 Сохранить объяснение</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

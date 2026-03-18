@@ -4,6 +4,7 @@ let activityCount = 0;
 let goodEventCount = 0;
 let badEventCount = 0;
 let allReports = [];
+let currentStreak = 0;
 
 // Пресеты событий
 const GOOD_PRESETS = [
@@ -39,6 +40,7 @@ window.onload = () => {
     addGoodEvent();
     addBadEvent();
     loadFromStorage();
+    updateStreak();
 };
 
 // UI helpers
@@ -283,6 +285,7 @@ async function saveReport() {
         allReports.push(report);
         allReports.sort((a, b) => new Date(a.date) - new Date(b.date));
         localStorage.setItem('allReports', JSON.stringify(allReports));
+        updateStreak();
 
         if (await ensureFolderAccess()) {
             const date = new Date(report.date);
@@ -323,6 +326,7 @@ async function loadFromFolder() {
         reports.sort((a, b) => new Date(a.date) - new Date(b.date));
         allReports = reports;
         localStorage.setItem('allReports', JSON.stringify(reports));
+        updateStreak();
         showMessage(`✅ Загружено ${reports.length} отчётов`, 'success');
         if (document.getElementById('analytics').classList.contains('active')) {
             loadAnalytics();
@@ -634,4 +638,51 @@ function showMessage(text, type) {
     el.className = `message ${type}`;
     el.style.display = 'block';
     setTimeout(() => { el.style.display = 'none'; }, 5000);
+}
+
+function updateStreak() {
+    if (!allReports.length) {
+        currentStreak = 0;
+        setStreak(0);
+        return;
+    }
+    const dates = allReports
+        .map(r => r.date)
+        .filter(Boolean)
+        .sort((a,b) => new Date(a) - new Date(b));
+    // Уникальные даты
+    const uniqueDates = Array.from(new Set(dates));
+    if (!uniqueDates.length) {
+        setStreak(0);
+        return;
+    }
+    // Считаем подряд до сегодня назад
+    let streak = 0;
+    let cursor = new Date();
+    cursor.setHours(0,0,0,0);
+    for (let i = uniqueDates.length - 1; i >= 0; i--) {
+        const d = new Date(uniqueDates[i]);
+        d.setHours(0,0,0,0);
+        if (d.getTime() === cursor.getTime()) {
+            streak += 1;
+            cursor.setDate(cursor.getDate() - 1);
+        } else if (d.getTime() === cursor.getTime() - 24*3600*1000) {
+            // пропуск на один день назад уже учтён циклом, только двигаем курсор
+            cursor.setDate(cursor.getDate() - 1);
+            i++; // пересчитать тот же элемент после сдвига
+        } else {
+            break;
+        }
+    }
+    currentStreak = streak;
+    setStreak(streak);
+}
+
+function setStreak(value) {
+    const el = document.getElementById('streakValue');
+    if (el) el.textContent = value;
+}
+
+function openHelp() {
+    window.open('help.html', '_blank');
 }
