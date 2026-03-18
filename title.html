@@ -3,352 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Дневник самочувствия — с динамическими событиями</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            overflow: hidden;
-        }
-
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 30px;
-            text-align: center;
-        }
-
-        .header h1 {
-            font-size: 2em;
-            margin-bottom: 10px;
-        }
-
-        .folder-setup {
-            background: #f8f9fa;
-            padding: 20px;
-            border-bottom: 1px solid #e9ecef;
-        }
-
-        .folder-controls {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .folder-status {
-            flex: 1;
-            padding: 12px;
-            background: white;
-            border: 2px solid #dee2e6;
-            border-radius: 8px;
-            font-family: monospace;
-            min-width: 250px;
-        }
-
-        .btn {
-            padding: 12px 25px;
-            border: none;
-            border-radius: 8px;
-            font-size: 1em;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn-success {
-            background: #28a745;
-            color: white;
-        }
-
-        .btn-success:hover {
-            background: #218838;
-        }
-
-        .btn-info {
-            background: #17a2b8;
-            color: white;
-        }
-
-        .btn-info:hover {
-            background: #138496;
-        }
-
-        .btn-warning {
-            background: #ffc107;
-            color: #212529;
-        }
-
-        .btn-warning:hover {
-            background: #e0a800;
-        }
-
-        .tabs {
-            display: flex;
-            background: #f8f9fa;
-            border-bottom: 1px solid #dee2e6;
-            flex-wrap: wrap;
-        }
-
-        .tab {
-            flex: 1;
-            padding: 15px;
-            text-align: center;
-            cursor: pointer;
-            font-weight: 600;
-            color: #6c757d;
-            transition: all 0.3s;
-            border-bottom: 3px solid transparent;
-            min-width: 120px;
-        }
-
-        .tab:hover {
-            background: #e9ecef;
-        }
-
-        .tab.active {
-            color: #667eea;
-            border-bottom-color: #667eea;
-            background: white;
-        }
-
-        .form-container {
-            padding: 30px;
-            max-height: 70vh;
-            overflow-y: auto;
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .form-group {
-            margin-bottom: 25px;
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 10px;
-            border-left: 4px solid #667eea;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #495057;
-            font-size: 1.1em;
-        }
-
-        .form-group .hint {
-            font-size: 0.9em;
-            color: #6c757d;
-            margin-top: 8px;
-            padding: 8px;
-            background: #e9ecef;
-            border-radius: 5px;
-            font-style: italic;
-        }
-
-        .subgroup {
-            margin-left: 20px;
-            padding: 10px;
-            background: white;
-            border-radius: 8px;
-            margin-top: 10px;
-        }
-
-        .subgroup-title {
-            font-weight: 600;
-            color: #495057;
-            margin-bottom: 10px;
-        }
-
-        .event-item {
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            border: 1px solid #dee2e6;
-        }
-
-        .event-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .event-header h4 {
-            color: #495057;
-            font-size: 0.95em;
-        }
-
-        .remove-btn {
-            background: none;
-            border: none;
-            color: #dc3545;
-            cursor: pointer;
-            font-size: 1.2em;
-            padding: 0 5px;
-        }
-
-        .remove-btn:hover {
-            color: #bd2130;
-        }
-
-        .event-presets {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-
-        .preset-tag {
-            background: #e9ecef;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.9em;
-            cursor: pointer;
-            transition: all 0.2s;
-            border: 1px solid #dee2e6;
-        }
-
-        .preset-tag:hover {
-            background: #667eea;
-            color: white;
-        }
-
-        .preset-tag.selected {
-            background: #667eea;
-            color: white;
-            border-color: #667eea;
-        }
-
-        .row {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-
-        .col {
-            flex: 1;
-            min-width: 200px;
-        }
-
-        input[type="range"] {
-            width: 100%;
-            margin: 10px 0;
-        }
-
-        .range-value {
-            display: inline-block;
-            background: #667eea;
-            color: white;
-            padding: 3px 10px;
-            border-radius: 15px;
-            font-size: 0.9em;
-        }
-
-        input[type="number"], input[type="text"], select, textarea {
-            width: 100%;
-            padding: 10px;
-            border: 2px solid #dee2e6;
-            border-radius: 8px;
-            font-size: 1em;
-            transition: border-color 0.3s;
-        }
-
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        .activity-item {
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            border: 1px solid #dee2e6;
-        }
-
-        .message {
-            margin-top: 20px;
-            padding: 15px;
-            border-radius: 8px;
-            display: none;
-        }
-
-        .message.success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-            display: block;
-        }
-
-        .message.error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-            display: block;
-        }
-
-        .badge {
-            display: inline-block;
-            padding: 3px 8px;
-            border-radius: 12px;
-            font-size: 0.8em;
-            background: #e9ecef;
-            margin-left: 10px;
-        }
-
-        @media (max-width: 600px) {
-            .folder-controls {
-                flex-direction: column;
-            }
-
-            .tabs {
-                flex-direction: column;
-            }
-
-            .row {
-                flex-direction: column;
-            }
-        }
-    </style>
+    <title>Дневник самочувствия — с аналитикой</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="app.js" defer></script>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>📊 Дневник самочувствия — полная версия</h1>
+            <h1>📊 Дневник самочувствия — с аналитикой</h1>
             <p>Сон, активность, события, учёба и эмоции</p>
         </div>
 
@@ -361,17 +23,21 @@
                     📂 Выбрать папку
                 </button>
                 <button class="btn btn-success" onclick="saveReport()">
-                    💾 Сохранить отчёт
+                    💾 Сохранить в папку
+                </button>
+                <button class="btn btn-info" onclick="loadFromFolder()">
+                    📂 Загрузить из папки
                 </button>
             </div>
         </div>
 
         <div class="tabs">
-            <div class="tab active" onclick="switchTab('bio')">😴 Сон</div>
-            <div class="tab" onclick="switchTab('activity')">🏃 Активность</div>
-            <div class="tab" onclick="switchTab('emotions')">😊 События</div>
-            <div class="tab" onclick="switchTab('study')">📚 Учёба</div>
-            <div class="tab" onclick="switchTab('summary')">📊 Итоги</div>
+            <div class="tab active" onclick="switchTab('bio', this)">😴 Сон</div>
+            <div class="tab" onclick="switchTab('activity', this)">🏃 Активность</div>
+            <div class="tab" onclick="switchTab('emotions', this)">😊 События</div>
+            <div class="tab" onclick="switchTab('study', this)">📚 Учёба</div>
+            <div class="tab" onclick="switchTab('summary', this)">📊 Итоги</div>
+            <div class="tab" onclick="switchTab('analytics', this); loadAnalytics()">📈 Аналитика</div>
         </div>
 
         <div class="form-container">
@@ -493,8 +159,6 @@
 
             <!-- Вкладка: Итоги -->
             <div id="summary" class="tab-content">
-
-
                 <div class="form-group">
                     <label>⚡ Продуктивность (1-10)</label>
                     <input type="range" id="productivity" min="1" max="10" value="6" oninput="updateRangeValue('productivityVal', this.value)">
@@ -513,347 +177,72 @@
                 </div>
             </div>
 
+            <!-- Вкладка: Аналитика -->
+            <div id="analytics" class="tab-content">
+                <div class="date-picker">
+                    <select id="analyticsPeriod" onchange="loadAnalytics()" class="btn btn-info">
+                        <option value="7">Последние 7 дней</option>
+                        <option value="14">Последние 14 дней</option>
+                        <option value="30">Последние 30 дней</option>
+                        <option value="90">Последние 90 дней</option>
+                        <option value="all">Всё время</option>
+                    </select>
+                    <button class="btn btn-primary" onclick="loadAnalytics()">🔄 Обновить</button>
+                    <button class="btn btn-success" onclick="exportStats()">📥 Экспорт статистики</button>
+                </div>
+
+                <!-- Статистика -->
+                <div class="stats-grid" id="statsGrid"></div>
+
+                <!-- Графики -->
+                <div class="chart-container">
+                    <h3>📈 Динамика настроения, сна и стресса</h3>
+                    <canvas id="moodChart"></canvas>
+                </div>
+
+                <div class="chart-container">
+                    <h3>📊 Продуктивность и усталость</h3>
+                    <canvas id="productivityChart"></canvas>
+                </div>
+
+                <div class="chart-container">
+                    <h3>🌙 Сон и долг сна</h3>
+                    <canvas id="sleepChart"></canvas>
+                </div>
+
+                <div class="chart-container">
+                    <h3>🚶 Шаги и настроение</h3>
+                    <canvas id="stepsMoodChart"></canvas>
+                </div>
+
+                <!-- Корреляции -->
+                <div class="correlation-grid" id="correlations"></div>
+
+                <!-- Статистика событий -->
+                <div class="row">
+                    <div class="col">
+                        <div class="chart-container">
+                            <h3>✨ Частые хорошие события</h3>
+                            <div id="goodEventsStats" class="events-list"></div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="chart-container">
+                            <h3>💔 Частые плохие события</h3>
+                            <div id="badEventsStats" class="events-list"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="export-buttons">
+                    <button class="btn btn-info" onclick="exportJSON()">📥 Экспорт всех данных (JSON)</button>
+                    <button class="btn btn-success" onclick="exportCSV()">📥 Экспорт в CSV</button>
+                    <button class="btn btn-warning" onclick="clearAllData()">🗑️ Очистить все данные</button>
+                </div>
+            </div>
+
             <div id="message" class="message"></div>
         </div>
     </div>
-
-    <script>
-        // Переменные
-        let selectedFolder = null;
-        let activityCount = 0;
-        let goodEventCount = 0;
-        let badEventCount = 0;
-
-        // Предустановленные события
-        const GOOD_PRESETS = [
-            { emoji: '📚', text: 'Сдал лабу/работу' },
-            { emoji: '☀️', text: 'Солнышко светило' },
-            { emoji: '👥', text: 'Посидели с друзьями' },
-            { emoji: '🏆', text: 'Успех/достижение' },
-            { emoji: '😌', text: 'Хорошо отдохнул' },
-            { emoji: '🎮', text: 'Поиграл в игры' },
-            { emoji: '📺', text: 'Посмотрел кино/сериал' },
-            { emoji: '🍕', text: 'Вкусно поел' },
-            { emoji: '🎵', text: 'Послушал музыку' }
-        ];
-
-        const BAD_PRESETS = [
-            { emoji: '📉', text: 'Завалили/провалил' },
-            { emoji: '🌧', text: 'Дождь/плохая погода' },
-            { emoji: '😠', text: 'Ссора/конфликт' },
-            { emoji: '😫', text: 'Сильная усталость' },
-            { emoji: '🤒', text: 'Плохое самочувствие' },
-            { emoji: '💰', text: 'Финансовые проблемы' },
-            { emoji: '🚗', text: 'Пробки/опоздал' },
-            { emoji: '📱', text: 'Плохие новости' },
-            { emoji: '😤', text: 'Ничего не успел' }
-        ];
-
-        // Инициализация
-        window.onload = function() {
-            if (!window.showDirectoryPicker) {
-                showMessage('⚠️ Ваш браузер не поддерживает выбор папки. Используйте Chrome/Edge/Opera', 'error');
-            }
-            addActivity(); // Добавляем первую активность
-            addGoodEvent(); // Добавляем первое хорошее событие
-            addBadEvent(); // Добавляем первое плохое событие
-        };
-
-        // Обновление значения для range
-        function updateRangeValue(elementId, value) {
-            document.getElementById(elementId).textContent = value;
-        }
-
-        // Переключение вкладок
-        function switchTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-
-            document.getElementById(tabName).classList.add('active');
-            event.target.classList.add('active');
-        }
-
-        // Выбор папки
-        async function selectFolder() {
-            try {
-                selectedFolder = await window.showDirectoryPicker();
-                document.getElementById('folderStatus').innerHTML = `📁 Папка: <strong>${selectedFolder.name}</strong>`;
-                showMessage(`✅ Папка "${selectedFolder.name}" выбрана!`, 'success');
-            } catch (err) {
-                if (err.name !== 'AbortError') {
-                    showMessage('❌ Ошибка: ' + err.message, 'error');
-                }
-            }
-        }
-
-        // Добавление активности
-        function addActivity() {
-            const container = document.getElementById('activities');
-            const id = activityCount++;
-
-            const div = document.createElement('div');
-            div.className = 'activity-item';
-            div.id = `activity_${id}`;
-            div.innerHTML = `
-                <div class="event-header">
-                    <h4>🏃 Активность ${activityCount}</h4>
-                    <button class="remove-btn" onclick="removeActivity(${id})">❌</button>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <select id="activity_type_${id}">
-                            <option value="gym">🏋️ Тренажёрный зал</option>
-                            <option value="run">🏃 Бег/кардио</option>
-                            <option value="walk">🚶 Прогулка</option>
-                            <option value="yoga">🧘 Йога/растяжка</option>
-                            <option value="sport">⚽ Спортивные игры</option>
-                            <option value="other">✨ Своё</option>
-                        </select>
-                    </div>
-                    <div class="col">
-                        <input type="text" id="activity_other_${id}" placeholder="Если своё, напиши" style="display: none;">
-                    </div>
-                </div>
-                <div class="row" style="margin-top: 10px;">
-                    <div class="col">
-                        <label>Длительность (мин)</label>
-                        <input type="number" id="activity_duration_${id}" min="0" max="1000" value="30">
-                    </div>
-                    <div class="col">
-                        <label>Калории</label>
-                        <input type="number" id="activity_calories_${id}" min="0" max="5000" value="200">
-                    </div>
-                </div>
-            `;
-
-            container.appendChild(div);
-
-            // Показываем/скрываем поле "своё"
-            document.getElementById(`activity_type_${id}`).addEventListener('change', function(e) {
-                const otherField = document.getElementById(`activity_other_${id}`);
-                otherField.style.display = e.target.value === 'other' ? 'block' : 'none';
-            });
-        }
-
-        // Удаление активности
-        function removeActivity(id) {
-            const element = document.getElementById(`activity_${id}`);
-            if (element) element.remove();
-        }
-
-        // Добавление хорошего события
-        function addGoodEvent() {
-            const container = document.getElementById('goodEvents');
-            const id = goodEventCount++;
-
-            const div = document.createElement('div');
-            div.className = 'event-item';
-            div.id = `good_${id}`;
-
-            // Создаем пресеты
-            let presetsHtml = '<div class="event-presets">';
-            GOOD_PRESETS.forEach(preset => {
-                presetsHtml += `<span class="preset-tag" onclick="selectGoodPreset(${id}, '${preset.emoji} ${preset.text}')">${preset.emoji} ${preset.text}</span>`;
-            });
-            presetsHtml += '</div>';
-
-            div.innerHTML = `
-                <div class="event-header">
-                    <h4>✨ Хорошее событие ${goodEventCount}</h4>
-                    <button class="remove-btn" onclick="removeGoodEvent(${id})">❌</button>
-                </div>
-                ${presetsHtml}
-                <textarea id="good_text_${id}" rows="2" placeholder="Опиши событие..." style="margin-top: 10px;"></textarea>
-            `;
-
-            container.appendChild(div);
-        }
-
-        // Выбор пресета для хорошего события
-        function selectGoodPreset(id, text) {
-            document.getElementById(`good_text_${id}`).value = text;
-
-            // Визуальное выделение
-            document.querySelectorAll(`#good_${id} .preset-tag`).forEach(tag => {
-                tag.classList.remove('selected');
-            });
-            event.target.classList.add('selected');
-        }
-
-        // Удаление хорошего события
-        function removeGoodEvent(id) {
-            const element = document.getElementById(`good_${id}`);
-            if (element) element.remove();
-        }
-
-        // Добавление плохого события
-        function addBadEvent() {
-            const container = document.getElementById('badEvents');
-            const id = badEventCount++;
-
-            const div = document.createElement('div');
-            div.className = 'event-item';
-            div.id = `bad_${id}`;
-
-            // Создаем пресеты
-            let presetsHtml = '<div class="event-presets">';
-            BAD_PRESETS.forEach(preset => {
-                presetsHtml += `<span class="preset-tag" onclick="selectBadPreset(${id}, '${preset.emoji} ${preset.text}')">${preset.emoji} ${preset.text}</span>`;
-            });
-            presetsHtml += '</div>';
-
-            div.innerHTML = `
-                <div class="event-header">
-                    <h4>💔 Плохое событие ${badEventCount}</h4>
-                    <button class="remove-btn" onclick="removeBadEvent(${id})">❌</button>
-                </div>
-                ${presetsHtml}
-                <textarea id="bad_text_${id}" rows="2" placeholder="Опиши событие..." style="margin-top: 10px;"></textarea>
-            `;
-
-            container.appendChild(div);
-        }
-
-        // Выбор пресета для плохого события
-        function selectBadPreset(id, text) {
-            document.getElementById(`bad_text_${id}`).value = text;
-
-            // Визуальное выделение
-            document.querySelectorAll(`#bad_${id} .preset-tag`).forEach(tag => {
-                tag.classList.remove('selected');
-            });
-            event.target.classList.add('selected');
-        }
-
-        // Удаление плохого события
-        function removeBadEvent(id) {
-            const element = document.getElementById(`bad_${id}`);
-            if (element) element.remove();
-        }
-
-        // Сбор хороших событий
-        function collectGoodEvents() {
-            const events = [];
-            for (let i = 0; i < goodEventCount; i++) {
-                const eventEl = document.getElementById(`good_${i}`);
-                if (eventEl) {
-                    const text = document.getElementById(`good_text_${i}`).value;
-                    if (text.trim()) {
-                        events.push(text);
-                    }
-                }
-            }
-            return events;
-        }
-
-        // Сбор плохих событий
-        function collectBadEvents() {
-            const events = [];
-            for (let i = 0; i < badEventCount; i++) {
-                const eventEl = document.getElementById(`bad_${i}`);
-                if (eventEl) {
-                    const text = document.getElementById(`bad_text_${i}`).value;
-                    if (text.trim()) {
-                        events.push(text);
-                    }
-                }
-            }
-            return events;
-        }
-
-        // Сбор активностей
-        function collectActivities() {
-            const activities = [];
-            for (let i = 0; i < activityCount; i++) {
-                const activityEl = document.getElementById(`activity_${i}`);
-                if (activityEl) {
-                    const type = document.getElementById(`activity_type_${i}`).value;
-                    const other = document.getElementById(`activity_other_${i}`).value;
-                    const duration = document.getElementById(`activity_duration_${i}`).value;
-                    const calories = document.getElementById(`activity_calories_${i}`).value;
-
-                    activities.push({
-                        type: type,
-                        description: type === 'other' ? other : null,
-                        duration: parseInt(duration),
-                        calories: parseInt(calories)
-                    });
-                }
-            }
-            return activities;
-        }
-
-        // Сбор всех данных
-        function collectFormData() {
-            return {
-                date: new Date().toISOString().split('T')[0],
-                timestamp: new Date().toISOString(),
-
-                // Сон
-                sleepTime: document.getElementById('sleepTime').value,
-                wakeTime: document.getElementById('wakeTime').value,
-                daySleep: parseInt(document.getElementById('daySleep').value),
-                totalSleep: parseFloat(document.getElementById('totalSleep').value),
-                sleepQuality: parseInt(document.getElementById('sleepQuality').value),
-
-                // Активность
-                activities: collectActivities(),
-                steps: parseInt(document.getElementById('steps').value),
-
-                // Эмоции
-                mood: parseInt(document.getElementById('mood').value),
-                stress: parseInt(document.getElementById('stress').value),
-                goodEvents: collectGoodEvents(),
-                badEvents: collectBadEvents(),
-
-                // Учёба
-                classesAttended: parseInt(document.getElementById('classesAttended').value),
-                classesTotal: parseInt(document.getElementById('classesTotal').value),
-                homeStudyHours: parseFloat(document.getElementById('homeStudyHours').value),
-                difficulty: parseInt(document.getElementById('difficulty').value),
-                procrastination: parseInt(document.getElementById('procrastination').value),
-
-                // Итоги
-                grades: document.getElementById('grades').value,
-                productivity: parseInt(document.getElementById('productivity').value),
-                fatigue: parseInt(document.getElementById('fatigue').value),
-                comment: document.getElementById('comment').value
-            };
-        }
-
-        // Сохранение отчёта
-        async function saveReport() {
-            if (!selectedFolder) {
-                showMessage('❌ Сначала выбери папку для сохранения!', 'error');
-                return;
-            }
-
-            try {
-                const report = collectFormData();
-                const fileName = `report_${report.date}.json`;
-
-                const fileHandle = await selectedFolder.getFileHandle(fileName, { create: true });
-                const writable = await fileHandle.createWritable();
-                await writable.write(JSON.stringify(report, null, 2));
-                await writable.close();
-
-                showMessage(`✅ Отчёт сохранён: ${fileName}`, 'success');
-
-            } catch (err) {
-                showMessage('❌ Ошибка при сохранении: ' + err.message, 'error');
-            }
-        }
-
-        // Показать сообщение
-        function showMessage(text, type) {
-            const messageEl = document.getElementById('message');
-            messageEl.textContent = text;
-            messageEl.className = `message ${type}`;
-
-            setTimeout(() => {
-                messageEl.style.display = 'none';
-            }, 5000);
-        }
-    </script>
 </body>
 </html>
